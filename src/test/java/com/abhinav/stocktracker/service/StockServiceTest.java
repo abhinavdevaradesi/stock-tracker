@@ -176,8 +176,8 @@ class StockServiceTest {
 
         assertNotNull(result);
         assertEquals(1, result.size());
-        assertEquals("AAPL", result.get(0).symbol());
-        assertEquals("200.00", result.get(0).price());
+        assertEquals("AAPL", result.getFirst().symbol());
+        assertEquals("200.00", result.getFirst().price());
 
         verify(favoriteStockRepository, times(1))
                 .findAll();

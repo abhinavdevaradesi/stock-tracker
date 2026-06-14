@@ -121,12 +121,21 @@ cd stocktracker
 
 ### 2. Configure API Key
 
-Open `src/main/resources/application.properties` and update your Alpha Vantage API key:
+Create a `.env` file in the project root with your Alpha Vantage API key:
+
+```bash
+cp .env.example .env
+```
+
+Edit `.env` and add your API key:
 
 ```properties
-alpha.vantage.api.key=YOUR_API_KEY_HERE
-alpha.vantage.base.url=https://www.alphavantage.co/query
+ALPHA_VANTAGE_API_KEY=YOUR_API_KEY_HERE
 ```
+
+**Note:** The `.env` file is in `.gitignore` and will never be committed to Git. This keeps your API key safe.
+
+Get your free API key from: https://www.alphavantage.co/
 
 ### 3. Build the Project
 
@@ -163,7 +172,22 @@ java -jar target/stocktracker-0.0.1-SNAPSHOT.jar
 - Right-click on `StocktrackerApplication.java`
 - Select "Run"
 
-### 4. Verify Application is Running
+### Option 4: Run with Docker
+
+Build the Docker image:
+```bash
+docker build -t stocktracker .
+```
+
+Run the container with environment variables:
+```bash
+# Pass API key as environment variable
+docker run -e ALPHA_VANTAGE_API_KEY=your_api_key -p 8082:8082 stocktracker
+```
+
+**Important:** The `ALPHA_VANTAGE_API_KEY` must be passed as an environment variable at runtime. The `.env` file won't be copied into the Docker image (it's excluded).
+
+### Verify the Application is Running
 
 The application will start on `http://localhost:8082` (port configurable in `application.properties`)
 
@@ -497,6 +521,13 @@ public StockOverviewResponse getStockOverviewForSymbol(final String stockSymbol)
 
 ## Configuration
 
+### Environment Variables
+
+| Variable | Source | Description |
+|----------|--------|-------------|
+| `ALPHA_VANTAGE_API_KEY` | `.env` file | Alpha Vantage API key (set in `.env`, do NOT commit to Git) |
+| `PORT` | `application.properties` default | Server port (or pass as environment variable) |
+
 ### application.properties
 
 Located at: `src/main/resources/application.properties`
@@ -507,7 +538,7 @@ spring.application.name=stocktracker
 
 # Alpha Vantage Configuration
 alpha.vantage.base.url=https://www.alphavantage.co/query
-alpha.vantage.api.key=YOUR_API_KEY_HERE
+alpha.vantage.api.key=${ALPHA_VANTAGE_API_KEY:demo}
 
 # Database Configuration (H2 In-Memory)
 spring.datasource.url=jdbc:h2:mem:stockdb
@@ -525,7 +556,7 @@ spring.h2.console.enabled=true
 spring.h2.console.path=/h2-console
 
 # Server Port
-server.port=8082
+server.port=${PORT:8082}
 
 # Cache Configuration
 spring.cache.cache-names=stocks,stockOverviews
@@ -536,12 +567,18 @@ logging.level.com.abhinav.stocktracker=INFO
 logging.level.org.springframework.cache=DEBUG
 ```
 
-### Key Properties
+### Environment Variables
+
+| Variable | Source | Description |
+|----------|--------|-------------|
+| `ALPHA_VANTAGE_API_KEY` | `.env` file | Alpha Vantage API key (set in `.env`, do NOT commit to Git) |
+| `PORT` | `application.properties` default | Server port (or pass as environment variable) |
+
+### Key Application Properties
 
 | Property | Default | Description |
 |----------|---------|-------------|
-| `alpha.vantage.api.key` | `your_api_key` | Alpha Vantage API key (should be changed to your own) |
-| `server.port` | `8082` | Server port |
+| `server.port` | `8082` or `${PORT:8082}` | Server port |
 | `spring.cache.type` | `simple` | Cache implementation (simple = in-memory) |
 | `spring.jpa.hibernate.ddl-auto` | `update` | Auto-update database schema |
 

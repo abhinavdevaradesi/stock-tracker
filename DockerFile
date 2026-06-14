@@ -8,7 +8,12 @@ RUN ./mvnw clean package -DskipTests
 # Run stage
 FROM eclipse-temurin:21-jre-alpine
 WORKDIR /app
+
 COPY --from=build /app/target/*.jar app.jar
 
-EXPOSE 8080
+# Expose port
+EXPOSE 8082
+
+# Note: Environment variable ALPHA_VANTAGE_API_KEY must be passed at runtime
+# Example: docker run -e ALPHA_VANTAGE_API_KEY=your_api_key -p 8082:8082 stocktracker
 ENTRYPOINT ["java", "-jar", "app.jar"]

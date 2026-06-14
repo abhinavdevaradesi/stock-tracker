@@ -1,0 +1,28 @@
+# Maven / Build
+target/
+*.jar
+
+# IDE
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Git
+.git
+.gitignore
+
+# Docs & Misc
+README.md
+*.md
+.env
+.dockerignore
+Dockerfile*
+docker-compose.yml
+
+# Test files
+test-cache.ps1

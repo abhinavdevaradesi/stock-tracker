@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  stock-tracker:
+    build:
+      context: .
+      dockerfile: DockerFile
+    ports:
+      - "8082:8082"
+    env_file:
+      - .env
+    environment:
+      - ALPHA_VANTAGE_API_KEY=${ALPHA_VANTAGE_API_KEY}
+    restart: unless-stopped
